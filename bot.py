@@ -8,7 +8,7 @@ import sys
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-SYMBOL = "INDODAX:DGBIDR"   # ambil data harga TradingView INDODAX
+SYMBOL = "DGBIDR"   # ambil data harga TradingView INDODAX
 RES = "60"                  # 1 jam
 
 now = int(time.time())
