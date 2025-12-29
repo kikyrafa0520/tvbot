@@ -8,13 +8,13 @@ import sys
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-SYMBOL = "DGBIDR"   # pair di Indodax
-RES = "60"          # 1 jam
+SYMBOL = "DGBIDR"
+RES = "60"
 
 now = int(time.time())
 frm = now - (50 * 60 * 60)
 
-https://indodax.com/tradingview/history
+URL = "https://indodax.com/tradingview/history"
 
 params = {
     "symbol": SYMBOL,
@@ -23,7 +23,7 @@ params = {
     "to": now
 }
 
-print("Fetching Indodax TradingView...")
+print("Fetching TradingView...")
 r = requests.get(URL, params=params)
 print("HTTP:", r.status_code)
 
@@ -32,7 +32,6 @@ if r.status_code != 200:
     sys.exit(1)
 
 data = r.json()
-print("Status:", data.get("s"))
 
 if data.get("s") != "ok":
     print("API returned error:", data)
