@@ -14,7 +14,7 @@ RES = "60"                  # 1 jam
 now = int(time.time())
 frm = now - (50 * 60 * 60)   # 50 jam ke belakang
 
-URL = "https://api.tradingview.com/history"
+URL = "https://indodax.com/tradingview/history"
 
 params = {
     "symbol": SYMBOL,
