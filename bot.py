@@ -14,7 +14,7 @@ RES = "60"          # 1 jam
 now = int(time.time())
 frm = now - (50 * 60 * 60)
 
-URL = "https://indodax.com/tradingview/history"
+https://indodax.com/tradingview/history
 
 params = {
     "symbol": SYMBOL,
