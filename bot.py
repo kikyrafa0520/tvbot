@@ -8,11 +8,11 @@ import sys
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-SYMBOL = "DGBIDR"   # ambil data harga TradingView INDODAX
-RES = "60"                  # 1 jam
+SYMBOL = "DGBIDR"   # pair di Indodax
+RES = "60"          # 1 jam
 
 now = int(time.time())
-frm = now - (50 * 60 * 60)   # 50 jam ke belakang
+frm = now - (50 * 60 * 60)
 
 URL = "https://indodax.com/tradingview/history"
 
@@ -23,7 +23,7 @@ params = {
     "to": now
 }
 
-print("Fetching TradingView...")
+print("Fetching Indodax TradingView...")
 r = requests.get(URL, params=params)
 print("HTTP:", r.status_code)
 
@@ -32,11 +32,10 @@ if r.status_code != 200:
     sys.exit(1)
 
 data = r.json()
-
-print("TradingView status:", data.get("s"))
+print("Status:", data.get("s"))
 
 if data.get("s") != "ok":
-    print("TradingView error:", data)
+    print("API returned error:", data)
     sys.exit(1)
 
 closes = data["c"]
@@ -49,12 +48,13 @@ signal = "⬆ BUY" if ma7 > ma25 else "⬇ SELL"
 
 msg = f"""
 📊 TRADINGVIEW BOT (1H)
-Pair : {SYMBOL}
-⏰  {datetime.datetime.utcnow()} UTC
+Exchange : INDODAX
+Pair     : {SYMBOL}
+⏰ {datetime.datetime.utcnow()} UTC
 
-Last : {last:.6f}
-MA7  : {ma7:.6f}
-MA25 : {ma25:.6f}
+Last : {last}
+MA7  : {ma7}
+MA25 : {ma25}
 
 Signal : {signal}
 """
@@ -62,10 +62,7 @@ Signal : {signal}
 print(msg)
 
 tg = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-s = requests.post(tg, json={
-    "chat_id": CHAT_ID,
-    "text": msg
-})
+s = requests.post(tg, json={"chat_id": CHAT_ID, "text": msg})
 
 print("Telegram:", s.status_code)
 print(s.text)
