@@ -23,15 +23,23 @@ params = {
     "to": now
 }
 
+headers = {
+    "User-Agent": "Mozilla/5.0"
+}
+
 print("Fetching TradingView...")
-r = requests.get(URL, params=params)
+r = requests.get(URL, params=params, headers=headers, timeout=30)
 print("HTTP:", r.status_code)
 
-if r.status_code != 200:
-    print("API ERROR:", r.text)
+print("Raw response text:", r.text[:400])
+
+try:
+    data = r.json()
+except Exception as e:
+    print("JSON parse error:", e)
     sys.exit(1)
 
-data = r.json()
+print("Status:", data.get("s"))
 
 if data.get("s") != "ok":
     print("API returned error:", data)
@@ -57,8 +65,6 @@ MA25 : {ma25}
 
 Signal : {signal}
 """
-
-print(msg)
 
 tg = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 s = requests.post(tg, json={"chat_id": CHAT_ID, "text": msg})
