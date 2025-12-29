@@ -4,8 +4,12 @@ import datetime
 import os
 import sys
 
+# ===== Ambil TOKEN & CHAT_ID dari Secrets =====
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
+
+# ===== DEBUG — CEK apakah CHAT_ID terbaca =====
+print("CHAT_ID loaded =", CHAT_ID)
 
 PAIR = "dgbidr"
 URL = f"https://indodax.com/api/trades/{PAIR}"
@@ -20,19 +24,22 @@ if r.status_code != 200:
 
 data = r.json()
 
-# ambil harga close (float)
+# ===== Ambil harga closing terakhir =====
 closes = [float(x["price"]) for x in data]
 
-last = closes[0]                 # harga terakhir
+last = closes[0]
 ma7 = statistics.mean(closes[:7])
 ma25 = statistics.mean(closes[:25])
 
 signal = "⬆ BUY" if ma7 > ma25 else "⬇ SELL"
 
+# ==== Waktu UTC yang benar ====
+now_utc = datetime.datetime.now(datetime.UTC)
+
 msg = f"""
 📊 INDODAX BOT (LIVE)
 Pair : {PAIR.upper()}
-⏰  {datetime.datetime.utcnow()} UTC
+⏰  {now_utc}
 
 Last : {last}
 MA7  : {ma7}
@@ -43,6 +50,7 @@ Signal : {signal}
 
 print(msg)
 
+# ===== Kirim ke Telegram =====
 tg = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 s = requests.post(tg, json={"chat_id": CHAT_ID, "text": msg})
 
